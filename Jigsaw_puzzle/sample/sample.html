@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jigsaw Puzzle Game</title>
+  <style>
+    /* Basic resets and container styling */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+    h1 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .container {
+      position: relative;
+      width: 90vw;
+      max-width: 400px;
+      margin-top: 20px;
+    }
+    /* Grid container where the pieces should be dropped */
+    .grid-container {
+      position: relative;
+      width: 100%;
+      border: 2px dashed #ccc;
+      background: #fff;
+    }
+    /* Pieces container for the free puzzle pieces */
+    .pieces-container {
+      position: relative;
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      background: #fff;
+      height: 300px;
+      overflow: hidden;
+    }
+    /* Styling for drop zones (grid cells) */
+    .drop-zone {
+      position: absolute;
+      border: 1px solid #aaa;
+    }
+    /* Styling for puzzle pieces */
+    .puzzle-piece {
+      position: absolute;
+      border: 1px solid #333;
+      cursor: move;
+      user-select: none;
+      touch-action: none;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #3498db;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jigsaw Puzzle Game</h1>
+  <div class="container">
+    <div class="grid-container"></div>
+    <div class="pieces-container"></div>
+  </div>
+  <button id="reset-btn">Reset Puzzle</button>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const gridContainer = document.querySelector(".grid-container");
+      const piecesContainer = document.querySelector(".pieces-container");
+      const resetBtn = document.getElementById("reset-btn");
+      const imageSrc = "puzzle.jpg"; // Replace with your puzzle image path
+      const gridSize = 3; // e.g., a 3x3 puzzle
+      let pieces = [];
+  
+      // Initialize the puzzle
+      function initPuzzle() {
+        // Clear previous puzzle elements
+        gridContainer.innerHTML = "";
+        piecesContainer.innerHTML = "";
+        pieces = [];
+  
+        // Set grid container's height equal to its width for a square grid
+        const gridWidth = gridContainer.clientWidth;
+        gridContainer.style.height = gridWidth + "px";
+  
+        const pieceSize = gridWidth / gridSize;
+  
+        // Create drop zones where pieces snap in
+        for (let i = 0; i < gridSize * gridSize; i++) {
+          let x = i % gridSize;
+          let y = Math.floor(i / gridSize);
+          let dropZone = document.createElement("div");
+          dropZone.classList.add("drop-zone");
+          dropZone.dataset.index = i;
+          dropZone.style.width = pieceSize + "px";
+          dropZone.style.height = pieceSize + "px";
+          dropZone.style.left = (x * pieceSize) + "px";
+          dropZone.style.top = (y * pieceSize) + "px";
+          gridContainer.appendChild(dropZone);
+        }
+  
+        // Set the pieces container height to match the grid width
+        piecesContainer.style.height = gridWidth + "px";
+  
+        // Create puzzle pieces with image segments
+        for (let i = 0; i < gridSize * gridSize; i++) {
+          let x = i % gridSize;
+          let y = Math.floor(i / gridSize);
+          let piece = document.createElement("div");
+          piece.classList.add("puzzle-piece");
+          piece.dataset.index = i;
+          piece.style.width = pieceSize + "px";
+          piece.style.height = pieceSize + "px";
+          piece.style.backgroundImage = `url(${imageSrc})`;
+          piece.style.backgroundSize = `${gridWidth}px ${gridWidth}px`;
+          piece.style.backgroundPosition = `${-x * pieceSize}px ${-y * pieceSize}px`;
+  
+          // Randomly position the piece inside the pieces container with bounds checking
+          let maxLeft = piecesContainer.clientWidth - pieceSize;
+          let maxTop = piecesContainer.clientHeight - pieceSize;
+          let randomLeft = Math.floor(Math.random() * (Math.max(0, maxLeft) + 1));
+          let randomTop = Math.floor(Math.random() * (Math.max(0, maxTop) + 1));
+          piece.style.left = randomLeft + "px";
+          piece.style.top = randomTop + "px";
+  
+          piecesContainer.appendChild(piece);
+          pieces.push(piece);
+  
+          // Add drag and touch events for this piece
+          addDragEvents(piece);
+        }
+      }
+  
+      // Function to add drag and touch events to a puzzle piece
+      function addDragEvents(piece) {
+        let offsetX = 0, offsetY = 0;
+        let dragging = false;
+  
+        // Mouse events
+        piece.addEventListener("mousedown", function(e) {
+          dragging = true;
+          const rect = piece.getBoundingClientRect();
+          offsetX = e.clientX - rect.left;
+          offsetY = e.clientY - rect.top;
+          piece.style.zIndex = 1000;
+        });
+  
+        document.addEventListener("mousemove", function(e) {
+          if (dragging) {
+            e.preventDefault();
+            let x = e.clientX - offsetX;
+            let y = e.clientY - offsetY;
+            piece.style.left = x + "px";
+            piece.style.top = y + "px";
+          }
+        });
+  
+        document.addEventListener("mouseup", function(e) {
+          if (dragging) {
+            dragging = false;
+            piece.style.zIndex = 1;
+            snapToZone(piece);
+          }
+        });
+  
+        // Touch events
+        piece.addEventListener("touchstart", function(e) {
+          dragging = true;
+          let touch = e.touches[0];
+          const rect = piece.getBoundingClientRect();
+          offsetX = touch.clientX - rect.left;
+          offsetY = touch.clientY - rect.top;
+          piece.style.zIndex = 1000;
+          e.preventDefault();
+        });
+  
+        piece.addEventListener("touchmove", function(e) {
+          if (dragging) {
+            let touch = e.touches[0];
+            let x = touch.clientX - offsetX;
+            let y = touch.clientY - offsetY;
+            piece.style.left = x + "px";
+            piece.style.top = y + "px";
+            e.preventDefault();
+          }
+        });
+  
+        piece.addEventListener("touchend", function(e) {
+          if (dragging) {
+            dragging = false;
+            piece.style.zIndex = 1;
+            snapToZone(piece);
+          }
+        });
+      }
+  
+      // Function to snap a puzzle piece to its drop zone if it’s close enough
+      function snapToZone(piece) {
+        const pieceRect = piece.getBoundingClientRect();
+        const zones = document.querySelectorAll(".drop-zone");
+        zones.forEach(zone => {
+          const zoneRect = zone.getBoundingClientRect();
+          // Check if piece is close to the zone (adjust threshold as needed)
+          if (
+            Math.abs(pieceRect.left - zoneRect.left) < 20 &&
+            Math.abs(pieceRect.top - zoneRect.top) < 20
+          ) {
+            // If drop zone is empty, snap piece into place
+            if (zone.childElementCount === 0) {
+              zone.appendChild(piece);
+              piece.style.left = "0px";
+              piece.style.top = "0px";
+            }
+          }
+        });
+      }
+  
+      // Debounce function to limit how often a function is called
+      function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+        }
+      }
+  
+      // Reinitialize the puzzle on window resize using the debounce function
+      window.addEventListener("resize", debounce(initPuzzle, 300));
+  
+      resetBtn.addEventListener("click", initPuzzle);
+      initPuzzle();
+    });
+  </script>
+</body>
+</html>

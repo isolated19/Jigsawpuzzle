@@ -1,0 +1,347 @@
+/* Global Styles */
+@import url("https://fonts.googleapis.com/css2?family=Lemon&display=swap");
+
+
+html,body{
+  height: 100%;
+}
+body {
+ 
+  background: url('{{ bg_image }}') no-repeat center center/cover;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+.title {
+
+  font-family: "Lemon", serif;
+  font-size: 2rem;
+  color: #ea1d23;
+  text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white,
+    2px 2px 0 white, -4px -4px 0 white, 4px -4px 0 white, -4px 4px 0 white,
+    4px 4px 0 white, -6px -6px 0 white, 6px -6px 0 white, -6px 6px 0 white,
+    6px 6px 0 white;
+    cursor: default;
+}
+
+.headder {
+  width: 100%;
+  display: flex;
+
+  justify-content: space-between;
+}
+
+.timer {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  color: #fff;
+  cursor: default;
+
+
+}
+.timer-div{
+  /* From https://css.glass */
+background: rgba(229, 222, 222, 0.35);
+border-radius: 16px;
+box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;backdrop-filter: blur(6.9px);
+-webkit-backdrop-filter: blur(6.9px);
+border: 1px solid rgba(229, 222, 222, 0.49);
+}
+.imagedisplay{
+  width: 60vw;
+  height: 80vh;
+  color: white;
+  position: relative;
+  /* left: 50%; */
+  bottom: 20%;
+  display: none;
+  border: white;
+
+}
+.imagedispcontainer{
+  width:100%;
+  height: 100%;
+  background-repeat: no-repeat; /* Prevents tiling */
+  /* Choose one of these size options: */
+  background-size: contain; /* Fits whole image, may show background */
+  /* OR */
+
+  background-position: center; /* Centers the image */
+}
+
+
+
+/* Puzzle Board Layout */
+.puzzle-board {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-direction: row-reverse;
+}
+
+/* Responsive Containers (Square with aspect ratio 1) */
+.pieces-container {
+
+  aspect-ratio: 1;
+  width: 35vw;
+  
+
+  position: relative;
+  border-radius: 10px;
+}
+.grid-container {
+  width: 35vw;
+  /* max-width: 400px; */
+  aspect-ratio: 1;
+
+  position: relative;
+  border-radius: 10px;
+}
+
+/* Puzzle Piece Styles */
+.puzzle-piece {
+  position: absolute;
+  cursor: grab;
+  background-repeat: no-repeat;
+}
+
+.puzzle-piece.dragging {
+  opacity: 4;
+}
+
+/* Drop Zone Styles */
+.drop-zone {
+  position: absolute;
+  border: 1px solid #000000;
+  background-color: #ffffff;
+}
+.back-butn{
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: #fff;
+
+}
+
+.popup {
+  position: absolute;
+  top: 50%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  background: white;
+  width: 300px;
+  height: 184px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: none;
+}
+.popup h2 {
+  color: #5474b6;
+  font-size: 24px;
+  justify-self: center;
+  margin-top: 25px;
+}
+.popup img {
+  width: 80px;
+  margin: 10px 0;
+  display: none;
+}
+
+.puzzle-container-2 {
+  position: absolute;
+  top: 57%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
+#leaderboard-btn{
+  display: none;
+}
+#reset-btn{
+  display: none;
+}
+h4{
+  display: none;
+
+
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* semi-transparent dark overlay */
+  display: none;                  /* hidden by default */
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;                  /* on top of everything */
+}
+
+.popup-content {
+  background: #f7b733;            /* or any color you prefer */
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 250px;                   /* adjust as needed */
+}
+
+.popup-content h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.popup-content p {
+  margin-bottom: 20px;
+}
+
+.popup-content button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #e63946;           /* or your preferred color */
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
+
+@media screen and (max-width: 786px) {
+  .pieces-container {
+    bottom: 10px;
+  }
+
+  .puzzle-board {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-direction: column-reverse;
+  }
+  .game-container {
+    width: 100%;
+    height: 100vh;
+  }
+  .puzzle-container-2{
+    top: 57%;
+    width: 100%;
+  }
+}
+
+
+@media screen and (max-width: 486px) {
+   .title{
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Lemon", serif;
+    font-size: 6vw;
+    color: #ea1d23;
+    text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white, -4px -4px 0 white, 4px -4px 0 white, -4px 4px 0 white;
+  
+   }
+
+  
+
+  
+  .pieces-container {
+    bottom: 0px;
+    width: 90vw;
+    
+    position: relative;
+}
+  
+
+  .puzzle-board {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /* gap: 72px; */
+    flex-direction: column-reverse;
+  }
+  .game-container {
+    width: 100%;
+    height: 100vh;
+    /* z-index: auto; */
+  }
+  .puzzle-container-2{
+    top: 57%;
+    width: 100%;
+  }
+.grid-container{
+  width: 60vw;
+  /* max-width: -webkit-fill-available; */
+
+}
+
+
+.popup {
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(to bottom, #f4b220, #f4b220);
+
+  width:80%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: none;
+}
+.popup h2 {
+  color: #ffffff;
+   font-size: 13px;
+     
+    }
+
+.popup img {
+  width: 80px;
+  margin: 10px 0;
+}
+
+#leaderboard-btn{
+  background-color: #ea1d23;
+  font-size: 20px;
+  width: 300px;
+  /* height: 40px; */
+  border-radius: 5px;
+  color: #ffffff;
+  border: #cac8c8;
+  outline: #ffffff;
+  margin: 10px;
+}
+
+#reset-btn{
+  background-color: #ffffff;
+  font-size: 20px;
+  width: 220px;
+  height: 40px;
+
+  border-radius: 5px;
+  color: #f4b220;
+  border: #cac8c8;
+  outline: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+}

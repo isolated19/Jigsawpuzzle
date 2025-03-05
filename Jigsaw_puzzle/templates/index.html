@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Jigsaw Puzzle</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lemon&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+       html, body {
+            display: flex;
+            justify-content:center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background: url('{{ bg_image }}') no-repeat center center/cover ;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            position: relative;
+            /* overflow: hidden; */
+        }
+        .headder {
+          position: absolute;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100%;
+          
+          display: flex;
+          justify-content: space-between;
+        }
+        .top-btn{
+          background-color: transparent;
+          outline: none;
+          border: none;
+          color: #fff;
+          margin-left: 10px;
+ 
+
+        }
+        .settings{
+          background-color: transparent;
+          outline: none;
+          border: none;
+          color: #fff;
+          margin-right: 10px;
+          opacity: 0;
+          pointer-events: auto;
+         
+
+
+        }
+        .title {
+          
+            font-family: 'Lemon', serif;
+            font-size: 2rem;
+            color: #EA1D23;
+            text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white,
+                        -4px -4px 0 white, 4px -4px 0 white, -4px 4px 0 white, 4px 4px 0 white,
+                        -6px -6px 0 white, 6px -6px 0 white, -6px 6px 0 white, 6px 6px 0 white;
+            cursor: default;
+
+
+           }
+        .container {
+            width: 50vw;
+            height: 70vh;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(229, 222, 222, 0.35);
+            border-radius: 16px;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;backdrop-filter: blur(6.9px);
+            -webkit-backdrop-filter: blur(6.9px);
+            border: 1px solid rgba(229, 222, 222, 0.49);
+        }
+        .Start{
+             width: 270px;
+             height: 60px;
+             border-radius: 30px;
+             display: flex;
+             justify-content: center;
+             font-family: 'Lemon', serif;
+             align-items: center;
+             font-size: 2rem;
+             background: linear-gradient(to bottom, #F4B220, #F4B220);
+             border: none;
+             /* outline: none; */
+        
+
+
+        }
+        .button:hover{
+            cursor: pointer;
+            background: linear-gradient(to bottom, #94918b, #F4B220);
+
+        }
+        .right-container {
+            width: 20vw;
+            height: 70vh;
+            /* background: white; */
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+        }
+
+       
+    .image-selector {
+      margin-bottom: 20px;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+
+    .puzzle-pieces {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+
+    .piece {
+      width: 80px;
+      height: 80px;
+      /* position: absolute; */
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(calc(15deg * var(--i)));
+      background-size: cover;
+      /* border: 1px solid #ddd; */
+      border-radius: 5px;
+      /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+    }
+ 
+    .modal {
+        display: none;
+        position: fixed;
+        padding: 10px;
+        left: 40%;
+        margin-left: -150px;
+        top: 50%;
+        margin-top: -216px;
+        border-radius: 10px;
+        z-index: 20;
+        border: 1px solid #ddd;
+        box-shadow:  0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+        color: black;
+        background: #f9f9f9;
+        font-size: 24px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+    }
+
+    input {
+      margin-top: 1rem;
+    }
+
+    input::file-selector-button {
+      font-weight: bold;
+      color: dodgerblue;
+      padding: 0.5em;
+      border: thin solid grey;
+      border-radius: 3px;
+    }
+
+ 
+
+      #popup1 {
+        -webkit-box-shadow:  0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+        box-shadow:  0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+      }
+
+
+        /* From Uiverse.io by adeladel522 */ 
+      
+        .btnplace{
+          display: flex;
+          justify-content: center;
+        }
+
+    
+    .button {
+      position: relative;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+      padding-block: 0.5rem;
+      padding-inline: 1.25rem;
+      background-color: rgb(0 107 179);
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #ffff;
+      gap: 10px;
+      font-weight: bold;
+      border: 3px solid #ffffff4d;
+      outline: none;
+      overflow: hidden;
+      font-size: 15px;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .button:hover {
+      transform: scale(1.05);
+      border-color: #fff9;
+    }
+
+    .button:hover .icon {
+      transform: translate(4px);
+    }
+
+    .button:hover::before {
+      animation: shine 1.5s ease-out infinite;
+    }
+
+    .button::before {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 100%;
+      background-image: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0) 30%,
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0) 70%
+      );
+      top: 0;
+      left: -100px;
+      opacity: 0.6;
+    }
+
+    @keyframes shine {
+      0% {
+        left: -100px;
+      }
+
+      60% {
+        left: 100%;
+      }
+
+      to {
+        left: 100%;
+      }
+    }
+    .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+   
+
+  .square .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 93px;
+}
+
+
+.square .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 35px;
+}
+
+.square input:checked+.slider {
+    background-color:rgb(0 107 179);
+}
+
+.square input:checked+.slider:before {
+    transform: translateX(30px);
+}
+
+
+
+    @media screen and (max-width:786px){
+      .title{
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: "Lemon", serif;
+        font-size: 25px;
+        color: #ea1d23;
+        text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white, -4px -4px 0 white, 4px -4px 0 white, -4px 4px 0 white;
+      }
+      .container {
+        width: 60vw;
+        height: 31vh;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+
+    }
+
+    .piece {
+      width: 78px;
+      height: 78px;
+      /* position: absolute; */
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(calc(15deg * var(--i)));
+      background-size: cover;
+      /* border: 1px solid #ddd; */
+      border-radius: 5px;
+      /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+    }
+     
+
+
+    body {
+
+   
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    position: relative;
+    flex-direction: column;
+
+
+}
+  .right-container {
+              width: 85vw;
+              height: 57vh;
+              /* background: white; */
+              border-radius: 10px;
+              display: flex;
+              justify-content: space-evenly;      
+              padding-right: 29px;      /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+          }
+
+
+  .puzzle-pieces {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-top: px;
+  }
+ 
+  .modal label{
+       font-size: 20px;
+  }
+
+  .modal input{
+    font-size: small;
+  }
+  
+ 
+
+
+  }
+
+
+
+
+    </style>
+</head>
+<body>
+      <div class="headder">
+        <button onclick="info()"  style="opacity: 0;"  class="top-btn"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+          <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+        </svg></button>
+        <h2 class="title">Jigsaw Puzzle</h2>
+        <button ondblclick="showSettings()"class="settings" ><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+          <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+        </svg></i></button>
+    </div>
+    <div class="container">
+       <button type="submit" onclick="location.href='/puzzle'" class="Start">Start</button>
+    </div>
+    
+     <!-- Settings Modal -->
+     <div id="settings-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" style="font-weight: 600;  cursor: pointer; color:red;display: flex; justify-content: flex-end;">&times;</span>
+        <h3>Settings</h3>
+        <label style="font-weight: 600;">Background Image:</label>
+        <input type="file" id="bg-image" accept="image/*"><p id="imageResolution" style="font-size: 12px;" ></p><br>
+        <!-- From Uiverse.io by adeladel522 --> <div class="btnplace">
+        <button class="button button1" onclick="uploadBackgroundImage()">
+          Apply Now
+          <svg fill="currentColor" viewBox="0 0 24 24" class="icon" >
+            <path
+              clip-rule="evenodd"
+              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
+              fill-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
+         </div>
+
+    
+        <br>
+    
+        <label style="font-weight: 600;">Upload Puzzle Image:</label>
+        <input type="file" id="puzzle-image" accept="image/*" onchange="displayImageDetails()">        <p id="imageDetails" style="font-size: 12px;"></p>
+        <br>
+        <div class="btnplace">
+          <button class="button button2"onclick="uploadPuzzleImage()">
+            Upload Image          <svg fill="currentColor" viewBox="0 0 24 24" class="icon" >
+            <path
+              clip-rule="evenodd"
+              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
+              fill-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
+      </div>
+    
+    
+
+         <br>
+
+            <label style="font-weight: 600;" >Grid Rows:</label>
+            <input type="number" id="grid-rows" min="1" placeholder="Enter the row"><br>
+        
+            <label style="font-weight: 600;" >Grid Columns:</label>
+            <input type="number" id="grid-columns" min="1" placeholder="Enter the Column"><br>
+            <div class="btnplace">
+            <button class="button button2" onclick="saveGridSettings()">
+              Save Grid Settings
+              <svg fill="currentColor" viewBox="0 0 24 24" class="icon" >
+                <path
+                  clip-rule="evenodd"
+                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
+                  fill-rule="evenodd"
+                ></path>
+              </svg>
+
+             </button>
+            </div> 
+            <div class="hintdiv">
+              <label for="">Hint Button</label>
+              <div class="hintoption toggle-switch square">
+                <label class="switch">
+                  <input type="checkbox" id="toggleSwitch">
+                  <span class="slider"></span>
+                 </label>
+                
+              </div>
+            </div>
+           
+    </div>
+ 
+</body>
+<script >
+        const settingsBtn = document.getElementById("settings-btn");
+        const settingsModal = document.getElementById("settings-modal");
+        const closeModal = document.querySelector(".close");
+        const saveSettingsBtn = document.getElementById("save-settings");
+        const toggleSwitch = document.getElementById('toggleSwitch');
+
+        function showSettings() {
+          const modal = document.getElementById("settings-modal");
+          modal.style.display = "block";
+        }
+
+        document.querySelector(".close").onclick = function () {
+          document.getElementById("settings-modal").style.display = "none";
+        };
+
+        window.onclick = function (event) {
+          const modal = document.getElementById("settings-modal");
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        };
+
+
+
+
+        function uploadBackgroundImage() {
+          let fileInput = document.getElementById("bg-image");
+          let formData = new FormData();
+          formData.append("bg_image", fileInput.files[0]);
+
+          fetch('/save_bg_image', {
+              method: "POST",
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+              alert(data.message);
+              window.onload()
+          })
+          .catch(error => console.error("background image not specified", error));
+      }
+      
+
+      function loadBackgroundImage() {
+    fetch('/get_bg_image')
+        .then(response => response.json())
+        .then(data => {
+            if (data.bg_image) {
+                document.body.style.backgroundImage = `url('${data.bg_image}')`;
+            }
+            else{
+              document.body.style.backgroundImage = `url('static/img/bg1.jpeg')`;
+            }
+        })
+        .catch(error => console.error('Choose the background image', error));
+      }
+
+      // window.onload = loadBackgroundImage;
+
+      function displayImageDetails() {
+          let fileInput = document.getElementById("puzzle-image");
+          let file = fileInput.files[0];
+
+          if (file) {
+              let img = new Image();
+              let objectURL = URL.createObjectURL(file);
+
+              img.onload = function () {
+                  document.getElementById('imageDetails').innerHTML = 
+                      ` Resolution: <b>${this.width} x ${this.height}</b>`;
+                  URL.revokeObjectURL(objectURL); // Free memory
+              };
+
+              img.src = objectURL;
+          } else {
+              document.getElementById('imageDetails').innerHTML = "No image selected.";
+          }
+      }
+
+
+
+        function uploadPuzzleImage() {
+          let fileInput = document.getElementById("puzzle-image");
+          let formData = new FormData();
+          formData.append("puzzle_image", fileInput.files[0]);
+
+          fetch('/save_puzzle_image', {
+              method: "POST",
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+              alert(data.message);
+          })
+          .catch(error => console.error("Choose the image to upload:", error));
+      }
+
+
+
+      function saveGridSettings() {
+        let gridRows = document.getElementById("grid-rows").value;
+        let gridColumns = document.getElementById("grid-columns").value;
+
+        fetch('/save_grid_settings', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ grid_rows: gridRows, grid_columns: gridColumns }) // FIXED keys
+        })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message); // Show success message
+        })
+        .catch(error => console.error('Error saving grid settings:', error));
+      }  
+
+    
+      function initializeAdmin() {
+            const toggleSwitch = document.getElementById('toggleSwitch');
+
+            // Load saved state
+            toggleSwitch.checked = localStorage.getItem('hintToggle') === 'true';
+
+            // Add event listener for toggle change
+            toggleSwitch.addEventListener('change', function() {
+                localStorage.setItem('hintToggle', this.checked);
+            });
+        }
+
+        window.onload = function () {
+          loadBackgroundImage();
+          initializeAdmin();
+  };
+   
+
+  document.getElementById('bg-image').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = function() {
+                // document.getElementById('previewImage').src = img.src;
+                // document.getElementById('previewImage').style.display = "block";
+                document.getElementById('imageResolution').textContent = `Resolution: ${img.naturalWidth} x ${img.naturalHeight}`;
+            };
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+
+
+</script>
+</html>
